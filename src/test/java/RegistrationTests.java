@@ -1,84 +1,51 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class RegistrationTests {
+public class RegistrationTests extends TestBase{
 
-    WebDriver wd;
 
     @BeforeMethod
-    public void init() {
-        wd = new ChromeDriver();
-        wd.navigate().to("https://telranedu.web.app/home");
+    public void preCondition(){
+        if(isLogged()){
+            logout();
+        }
     }
-
 
     @Test
+    public void registrationWrongEmail()
+    {
+       openLoginRegistrationForm();
+        int i = (int)(System.currentTimeMillis() / 1000) % 3600;
+        String email = "@mail.com";
+        String password = "$Abcd1234";
+        fillLoginRegistrationForm(email, password);
 
-    public void regNegativeTestWrongLog() {
-        WebElement loginBtn = wd.findElement(By.xpath("//a[@href='/login']"));
-        loginBtn.click();
+        submitRegistration();
 
-        WebElement emailInput = wd.findElement(By.xpath("//input[1]"));
-        emailInput.click();
-        emailInput.clear();
-        emailInput.sendKeys("@dot.com");
+//        Assert.assertTrue(wd.findElement(By.xpath("//div[text()='Registration failed with code 400']")).getText().equals("Registration failed with code 400"));
 
-        WebElement passInput = wd.findElement(By.xpath("//input[2]"));
-        passInput.click();
-        passInput.clear();
-        passInput.sendKeys("1234A!bcd");
 
-        wd.findElement(By.xpath("//button[2]")).click();
     }
-
-    public void regNegativeTestWrongPass() {
-        WebElement loginBtn = wd.findElement(By.xpath("//a[@href='/login']"));
-        loginBtn.click();
-
-        int i = (int) (System.currentTimeMillis() / 1000) % 3600;
-        WebElement emailInput = wd.findElement(By.xpath("//input[1]"));
-        emailInput.click();
-        emailInput.clear();
-        emailInput.sendKeys("atourov" + i + "@gmail.com");
-
-        WebElement passInput = wd.findElement(By.xpath("//input[2]"));
-        passInput.click();
-        passInput.clear();
-        passInput.sendKeys("wrongSynt");
-
-        wd.findElement(By.xpath("//button[2]")).click();
-    }
-
-//    public void regPositiveTest() {
-////
-//////        1. open
-//        WebElement loginBtn = wd.findElement(By.xpath("//a[@href='/login']"));
-//        loginBtn.click();
-//////
-////          2. fill
-//        int i = (int) (System.currentTimeMillis() / 1000) % 3600;
-//        WebElement emailInput = wd.findElement(By.xpath("//input[1]"));
-//        emailInput.click();
-//        emailInput.clear();
-//        emailInput.sendKeys("atourov" + i + "@gmail.com");
-////
-//        WebElement passInput = wd.findElement(By.xpath("//input[2]"));
-//        passInput.click();
-//        passInput.clear();
-//        passInput.sendKeys("1234A!bcd");
+//    @Test
+//    public void regPositiveTest(){
 //
-//////        3. submit
-//        wd.findElement(By.xpath("//button[2]")).click();
-//////        4. assert
+//        openLoginRegistrationForm();
+//        int i = (int)(System.currentTimeMillis() / 1000) % 3600;
+//        String email = "name" + i + "@mail.com";
+//        String password = "$Abcd1234";
+//        fillLoginRegistrationForm(email, password);
+//
+//        submitRegistration();
+//
 //        Assert.assertTrue(wd.findElement(By.xpath("//a[text()='ADD']")).getText().equals("ADD"));
-//
-//}
+//    }
+
+
+
 
     @AfterMethod
     public void tearDown() {
